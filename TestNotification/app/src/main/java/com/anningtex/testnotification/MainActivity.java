@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
                     "\nSDK版本:" + android.os.Build.VERSION.SDK +
                     "\n系统版本:" + android.os.Build.VERSION.RELEASE +
                     "\n软件包名:" + getPackageName());
+            startActivity(new Intent(MainActivity.this, Main2Activity.class));
         } else {
             textView.setText("还没有开启通知权限，点击去开启");
             textView.setOnClickListener(new View.OnClickListener() {
