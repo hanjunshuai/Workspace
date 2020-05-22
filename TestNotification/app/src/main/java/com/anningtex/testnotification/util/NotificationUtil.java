@@ -7,15 +7,21 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import static android.app.Notification.VISIBILITY_SECRET;
+import static android.provider.Settings.EXTRA_APP_PACKAGE;
+import static android.provider.Settings.EXTRA_CHANNEL_ID;
 import static androidx.core.app.NotificationCompat.PRIORITY_DEFAULT;
 
 /**
@@ -42,6 +48,55 @@ public class NotificationUtil extends ContextWrapper {
         // android 8.0 以上需进行特殊处理,也就是targetSDKVersion为26以上
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel();
+        }
+    }
+
+    /**
+     * 检查是否有通知权限
+     *
+     * @return
+     */
+    public boolean checkNotifySetting() {
+        NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+        // areNotificationsEnabled方法的有效性官方只最低支持到API 19，
+        // 低于19的仍可调用此方法不过只会返回true，即默认为用户已经开启了通知。
+        return manager.areNotificationsEnabled();
+    }
+
+    /**
+     * 打开权限
+     */
+    public void openNotifySetting() {
+        try {
+            // 根据isOpened结果，判断是否需要提醒用户跳转AppInfo页面，去打开App通知权限
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            //这种方案适用于 API 26, 即8.0（含8.0）以上可以用
+            intent.putExtra(EXTRA_APP_PACKAGE, getPackageName());
+            intent.putExtra(EXTRA_CHANNEL_ID, getApplicationInfo().uid);
+
+            //这种方案适用于 API21——25，即 5.0——7.1 之间的版本可以使用
+            intent.putExtra("app_package", getPackageName());
+            intent.putExtra("app_uid", getApplicationInfo().uid);
+
+            // 小米6 -MIUI9.6-8.0.0系统，是个特例，通知设置界面只能控制"允许使用通知圆点"——然而这个玩意并没有卵用，我想对雷布斯说：I'm not ok!!!
+            //  if ("MI 6".equals(Build.MODEL)) {
+            //      intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            //      Uri uri = Uri.fromParts("package", getPackageName(), null);
+            //      intent.setData(uri);
+            //      // intent.setAction("com.android.settings/.SubSettings");
+            //  }
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 出现异常则跳转到应用设置界面：锤子坚果3——OC105 API25
+            Intent intent = new Intent();
+
+            //下面这种方案是直接跳转到当前应用的设置界面。
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            intent.setData(uri);
+            startActivity(intent);
         }
     }
 
@@ -179,6 +234,7 @@ public class NotificationUtil extends ContextWrapper {
                 // 是否提示一次 true 如果Notification已经存在状态栏即使在调用notify也不会更新
                 .setOnlyAlertOnce(onlyAlertOnce)
                 .setAutoCancel(true);
+
         if (remoteViews != null) {
             // 设置自定义view通知栏
             notificationBuilder.setContent(remoteViews);
