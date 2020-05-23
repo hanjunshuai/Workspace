@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
+import com.anningtex.testnotification.receiver.NotificationClickReceiver;
 import com.anningtex.testnotification.util.NotificationUtil;
 
 import static android.provider.Settings.EXTRA_APP_PACKAGE;
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 NotificationUtil NotificationUtil = new NotificationUtil(MainActivity.this);
                 NotificationUtil.setContent(remoteViews);
+                Intent intent = new Intent(MainActivity.this, NotificationClickReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+                NotificationUtil.setContentIntent(pendingIntent);
                 notification = NotificationUtil.getNotification("这个是标题4", "这个是内容4", R.mipmap.ic_launcher);
                 for (int i = 1; i <= 101; i++) {
                     try {
@@ -45,34 +50,20 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    remoteViews.setProgressBar(R.id.progress_horizontal, 100, i, false);
+                    remoteViews.setProgressBar(R.id.progress_horizontal, 100, i, true);
                     if (i == 100) {
-                        remoteViews.setProgressBar(R.id.progress_horizontal, 100, i, false);
+                        remoteViews.setProgressBar(R.id.progress_horizontal, 100, i, true);
                         remoteViews.setTextViewText(R.id.title, "下载完成");
                     }
                     NotificationUtil.getManager().notify(4, notification);
                 }
-                getCount();
             }
         });
     }
 
-    private void getCount() {
-        if (remoteViews != null) {
-
-        }
-    }
 
     private RemoteViews getRemoteViews() {
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_progress);
-//        // 设置 点击通知栏的上一首按钮时要执行的意图
-//        remoteViews.setOnClickPendingIntent(R.id.btn_pre, getActivityPendingIntent(11));
-//        // 设置 点击通知栏的下一首按钮时要执行的意图
-//        remoteViews.setOnClickPendingIntent(R.id.btn_next, getActivityPendingIntent(12));
-//        // 设置 点击通知栏的播放暂停按钮时要执行的意图
-//        remoteViews.setOnClickPendingIntent(R.id.btn_start, getActivityPendingIntent(13));
-//        // 设置 点击通知栏的根容器时要执行的意图
-//        remoteViews.setOnClickPendingIntent(R.id.ll_root, getActivityPendingIntent(14));
         remoteViews.setTextViewText(R.id.tv_title, "下载进度");     // 设置通知栏上标题
         remoteViews.setTextViewText(R.id.tv_artist, "艺术家");   // 设置通知栏上艺术家
         return remoteViews;
