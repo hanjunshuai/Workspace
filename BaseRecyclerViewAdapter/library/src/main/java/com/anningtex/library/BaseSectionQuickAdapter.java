@@ -28,7 +28,7 @@ public abstract class BaseSectionQuickAdapter<T extends SectionEntity> extends B
         super(context, layoutResId, data);
         this.data = data == null ? new ArrayList<T>() : new ArrayList<T>(data);
         this.context = context;
-        this.layoutResId = layoutResId;
+        this.mLayoutResId = layoutResId;
         this.sectionHeadResId = sectionHeadResId;
     }
 
@@ -41,7 +41,7 @@ public abstract class BaseSectionQuickAdapter<T extends SectionEntity> extends B
             return new SectionHeadViewHolder(item);
         } else {
             item = LayoutInflater.from(parent.getContext()).inflate(
-                    layoutResId, parent, false);
+                    mLayoutResId, parent, false);
             return new BaseViewHolder(context, item);
         }
     }
