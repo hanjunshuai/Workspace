@@ -30,7 +30,7 @@ public class SectionAdapter extends BaseSectionQuickAdapter<MySection> {
             helper.setOnClickListener(R.id.more, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, item.header + "more..", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, item.header + "more..", Toast.LENGTH_LONG).show();
                 }
             });
     }

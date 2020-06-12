@@ -23,8 +23,9 @@ import java.util.ArrayList;
  * @CreateDate:2020-6-8 14:28:12
  */
 public class MainActivity extends AppCompatActivity {
-    private static final Class<?>[] ACTIVITY = {AnimationActivity.class, HeaderAndFooterUseActivity.class, PullToRefreshUseActivity.class, SectionUerActivity.class};
-    private static final String[] TITLE = {"Animation Use", "HeaderAndFooter Use", "PullToRefresh Use", "SectionUer use "};
+    private static final Class<?>[] ACTIVITY = {AnimationActivity.class, HeaderAndFooterUseActivity.class,
+            PullToRefreshUseActivity.class, SectionUerActivity.class, MultipleItemUseActivity.class};
+    private static final String[] TITLE = {"Animation Use", "HeaderAndFooter Use", "PullToRefresh Use", "SectionUer use ", "MultipleItem Use"};
     private ArrayList<HomeItem> mDataList;
     private RecyclerView mRecycler;
 

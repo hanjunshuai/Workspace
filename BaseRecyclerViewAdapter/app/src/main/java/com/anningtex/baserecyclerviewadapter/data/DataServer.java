@@ -1,5 +1,6 @@
 package com.anningtex.baserecyclerviewadapter.data;
 
+import com.anningtex.baserecyclerviewadapter.entity.MultipleItem;
 import com.anningtex.baserecyclerviewadapter.entity.MySection;
 import com.anningtex.baserecyclerviewadapter.entity.Status;
 
@@ -13,6 +14,9 @@ import java.util.List;
  * @CreateDate: 2020/6/8 11:20
  */
 public class DataServer {
+    private static final String HTTPS_AVATARS1_GITHUBUSERCONTENT_COM_LINK = "https://pics2.baidu.com/feed/f11f3a292df5e0fe09917cb92608faae5fdf7268.jpeg?token=5ed84aa3d0d7fe7a6e92451451077874";
+    private static final String CYM_CHAD = "alvis";
+
     public static List<MySection> getSampleData() {
         List<MySection> list = new ArrayList<>();
         list.add(new MySection(true, "2016/4/8", true));
@@ -56,4 +60,21 @@ public class DataServer {
         }
         return list;
     }
+
+    public static List<MultipleItem> getMultipleItemData() {
+        List<MultipleItem> list = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            MultipleItem multipleItem = new MultipleItem();
+            if (i % 2 == 0) {
+                multipleItem.setContent(HTTPS_AVATARS1_GITHUBUSERCONTENT_COM_LINK);
+                multipleItem.setItemType(MultipleItem.IMG);
+            } else {
+                multipleItem.setContent(CYM_CHAD + i);
+                multipleItem.setItemType(MultipleItem.TEXT);
+            }
+            list.add(multipleItem);
+        }
+        return list;
+    }
+
 }

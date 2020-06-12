@@ -2,6 +2,7 @@ package com.anningtex.library;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,42 +40,48 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerV
     public @interface AnimationType {
     }
 
-    public static final int ALPHAIN = 0;
-    public static final int SCALEIN = 1;
-    public static final int SLIDEIN_BOTTOM = 2;
-    public static final int SLIDEIN_LEFT = 3;
-    public static final int SLIDEIN_RIGHT = 4;
+    public static final int ALPHAIN = 0x00000001;
+    public static final int SCALEIN = 0x00000002;
+    public static final int SLIDEIN_BOTTOM = 0x00000003;
+    public static final int SLIDEIN_LEFT = 0x00000004;
+    public static final int SLIDEIN_RIGHT = 0x00000005;
 
-    protected Context context;
+    protected Context mContext;
     protected int mLayoutResId;
     protected List<T> mData;
     private Interpolator mInterpolator = new LinearInterpolator();
     private int mDuration = 300;
     private int mLastPosition = -1;
-    private boolean isFirstOnly = true;
+    private boolean mFirstOnlyEnable = true;
     @AnimationType
     private int animationType = ALPHAIN;
-    private BaseAnimation customAnimation = null;
-    private BaseAnimation selectAnimation = new AlphaInAnimation();
-    private boolean isOpenAnimation = false;
+    private BaseAnimation mCustomAnimation = null;
+    private BaseAnimation mSelectAnimation = new AlphaInAnimation();
+    private boolean mOpenAnimationEnable = false;
 
-    private static final int HEADER_VIEW = 0x00000001;
-    private static final int LOADING_VIEW = 0x00000002;
-    private static final int FOOTER_VIEW = 0x00000003;
-    private ArrayList<View> mHeaderViews = new ArrayList<>();
-    private ArrayList<View> mFooterViews = new ArrayList<>();
+    private static final int HEADER_VIEW = 0x00000111;
+    private static final int LOADING_VIEW = 0x00000222;
+    private static final int FOOTER_VIEW = 0x00000333;
+    private View mHeaderView;
+    private View mFooterView;
 
-    private boolean mNextLoad;
+    private boolean mNextLoadEnable;
     private boolean mIsLoadingMore;
 
     private OnRecyclerViewItemClickListener onRecyclerViewItemClickListener;
     private RequestLoadMoreListener mRequestLoadMoreListener;
 
+    @Deprecated
     public void setLoadMoreListener(int pageSize, RequestLoadMoreListener requestLoadMoreListener) {
         if (getItemCount() < pageSize) {
             return;
         }
-        mNextLoad = true;
+        mNextLoadEnable = true;
+        this.mRequestLoadMoreListener = requestLoadMoreListener;
+    }
+
+    public void setOnLoadMoreListener(RequestLoadMoreListener requestLoadMoreListener) {
+        mNextLoadEnable = true;
         this.mRequestLoadMoreListener = requestLoadMoreListener;
     }
 
@@ -92,6 +99,11 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerV
         this(context, layoutResId, null);
     }
 
+    public BaseQuickAdapter(Context context, List<T> data) {
+        this.mData = data == null ? new ArrayList<T>() : new ArrayList<T>(data);
+        this.mContext = context;
+    }
+
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
@@ -102,7 +114,7 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerV
      */
     public BaseQuickAdapter(Context context, int layoutResId, List<T> data) {
         this.mData = data == null ? new ArrayList<T>() : new ArrayList<T>(data);
-        this.context = context;
+        this.mContext = context;
         this.mLayoutResId = layoutResId;
     }
 
@@ -125,53 +137,50 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerV
         if (header == null) {
             throw new RuntimeException("header is null");
         }
-        if (mHeaderViews.size() == 0) {
-            mHeaderViews.add(header);
-        }
+        this.mHeaderView = header;
         this.notifyDataSetChanged();
     }
 
     public void addFooterView(View footer) {
-        mNextLoad = false;
+        mNextLoadEnable = false;
         if (footer == null) {
             throw new RuntimeException("footer is null");
         }
-        if (mFooterViews.size() == 0) {
-            mFooterViews.add(footer);
-        }
+        this.mFooterView = footer;
         this.notifyDataSetChanged();
     }
 
     public void isNextLoad(boolean isNextLoad) {
-        this.mNextLoad = isNextLoad;
+        this.mNextLoadEnable = isNextLoad;
         mIsLoadingMore = false;
         notifyDataSetChanged();
     }
 
     public int getHeaderViewsCount() {
-        return mHeaderViews.size();
+        return mHeaderView == null ? 0 : 1;
     }
 
     public int getFooterViewsCount() {
-        return mFooterViews.size();
+        return mFooterView == null ? 0 : 1;
     }
 
     @Override
     public int getItemCount() {
-        int i = mNextLoad ? 1 : 0;
+        int i = mNextLoadEnable ? 1 : 0;
         return mData.size() + i + getHeaderViewsCount() + getFooterViewsCount();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position < getHeaderViewsCount()) {
+        if (mHeaderView != null && position == 0) {
             return HEADER_VIEW;
         } else if (position == mData.size() + getHeaderViewsCount()) {
-            if (mNextLoad) {
+            if (mNextLoadEnable) {
                 return LOADING_VIEW;
             } else {
                 return FOOTER_VIEW;
             }
+
         }
         return getDefItemViewType(position);
     }
@@ -182,15 +191,14 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View item = null;
         if (viewType == 0) {
             return onCreateDefViewHolder(parent, viewType);
         } else if (viewType == LOADING_VIEW) {
             return new FooterViewHolder(getItemView(R.layout.def_loading, parent));
         } else if (viewType == HEADER_VIEW) {
-            return new HeadViewHolder(mHeaderViews.get(0));
+            return new HeadViewHolder(mHeaderView);
         } else if (viewType == FOOTER_VIEW) {
-            return new FooterViewHolder(mFooterViews.get(0));
+            return new FooterViewHolder(mFooterView);
         } else {
             return onCreateDefViewHolder(parent, viewType);
         }
@@ -214,13 +222,13 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerV
             if (onRecyclerViewItemClickListener != null) {
                 baseViewHolder.itemView.setOnClickListener(v -> onRecyclerViewItemClickListener.onItemClick(v, position - getHeaderViewsCount()));
             }
-            if (isOpenAnimation) {
-                if (!isFirstOnly || position > mLastPosition) {
+            if (mOpenAnimationEnable) {
+                if (!mFirstOnlyEnable || position > mLastPosition) {
                     BaseAnimation animation = null;
-                    if (customAnimation != null) {
-                        animation = customAnimation;
+                    if (mCustomAnimation != null) {
+                        animation = mCustomAnimation;
                     } else {
-                        animation = selectAnimation;
+                        animation = mSelectAnimation;
                     }
                     for (Animator anim : animation.getAnimators(holder.itemView)) {
                         anim.setDuration(mDuration).start();
@@ -230,7 +238,7 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerV
                 }
             }
         } else if (holder instanceof FooterViewHolder) {
-            if (mNextLoad && !mIsLoadingMore && mRequestLoadMoreListener != null) {
+            if (mNextLoadEnable && !mIsLoadingMore && mRequestLoadMoreListener != null) {
                 mIsLoadingMore = true;
                 mRequestLoadMoreListener.onLoadMoreRequested();
                 if (holder.itemView.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
@@ -249,38 +257,38 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerV
     }
 
     public void openLoadAnimation(@AnimationType int animationType) {
-        this.isOpenAnimation = true;
-        this.customAnimation = null;
+        this.mOpenAnimationEnable = true;
+        this.mCustomAnimation = null;
         switch (animationType) {
             case ALPHAIN:
-                selectAnimation = new AlphaInAnimation();
+                mSelectAnimation = new AlphaInAnimation();
                 break;
             case SCALEIN:
-                selectAnimation = new ScaleInAnimation();
+                mSelectAnimation = new ScaleInAnimation();
                 break;
             case SLIDEIN_BOTTOM:
-                selectAnimation = new SlideInBottomAnimation();
+                mSelectAnimation = new SlideInBottomAnimation();
                 break;
             case SLIDEIN_LEFT:
-                selectAnimation = new SlideInLeftAnimation();
+                mSelectAnimation = new SlideInLeftAnimation();
                 break;
             case SLIDEIN_RIGHT:
-                selectAnimation = new SlideInRightAnimation();
+                mSelectAnimation = new SlideInRightAnimation();
                 break;
         }
     }
 
     public void openLoadAnimation(BaseAnimation animation) {
-        this.isOpenAnimation = true;
-        this.customAnimation = animation;
+        this.mOpenAnimationEnable = true;
+        this.mCustomAnimation = animation;
     }
 
     public void openLoadAnimation() {
-        this.isOpenAnimation = true;
+        this.mOpenAnimationEnable = true;
     }
 
-    public void setFirstOnly(boolean firstOnly) {
-        this.isFirstOnly = firstOnly;
+    public void setFirstOnlyEnable(boolean firstOnlyEnable) {
+        this.mFirstOnlyEnable = firstOnlyEnable;
     }
 
     /**

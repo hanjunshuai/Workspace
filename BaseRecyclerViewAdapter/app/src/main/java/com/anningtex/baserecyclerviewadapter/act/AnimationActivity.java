@@ -45,7 +45,7 @@ public class AnimationActivity extends AppCompatActivity {
                 Toast.makeText(AnimationActivity.this, position + "", Toast.LENGTH_LONG).show();
             }
         });
-        quickAdapter.setFirstOnly(false);
+        quickAdapter.setFirstOnlyEnable(false);
         quickAdapter.openLoadAnimation();
         recyclerView.setAdapter(quickAdapter);
         initMenu();
