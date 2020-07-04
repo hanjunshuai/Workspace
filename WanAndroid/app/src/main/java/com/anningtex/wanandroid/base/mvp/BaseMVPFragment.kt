@@ -18,4 +18,11 @@ abstract class BaseMVPFragment<in V : IView, P : IPresenter<in V>> : BaseFragmen
     }
 
     abstract fun createPresenter(): P
+
+    override fun showLoading() {
+    }
+
+    override fun dismissLoading() {
+
+    }
 }

@@ -30,6 +30,7 @@ import com.anningtex.wanandroid.project.ProjectFragment
 import com.anningtex.wanandroid.search.SearchActivity
 import com.anningtex.wanandroid.setting.SettingActivity
 import com.anningtex.wanandroid.system.SystemFragment
+import com.anningtex.wanandroid.util.blur
 import com.anningtex.wanandroid.util.gotoActivity
 import com.anningtex.wanandroid.util.isCookieNotEmpty
 import com.google.android.material.navigation.NavigationView
@@ -102,7 +103,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(),
         }
 
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.avatar)
-//        avatarBackground.setImageBitmap(blur(mContext, bitmap, 22))
+        avatarBackground.setImageBitmap(blur(mContext, bitmap, 22))
     }
 
     override fun initData() {

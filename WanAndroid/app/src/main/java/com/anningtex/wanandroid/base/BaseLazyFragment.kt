@@ -79,11 +79,4 @@ abstract class BaseLazyFragment<in V : IView, P : IPresenter<in V>> : BaseMVPFra
      */
     protected abstract fun loadData()
 
-    override fun showLoading() {
-
-    }
-
-    override fun dismissLoading() {
-
-    }
 }

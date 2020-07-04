@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
  * @CreateDate:     2020/7/3 14:47
  */
 abstract class BaseFragment : Fragment() {
-    private lateinit var mContext: Context
+    protected lateinit var mContext: Context
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
