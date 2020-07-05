@@ -1,6 +1,7 @@
 package com.anningtex.wanandroid.home.contract
 
 import com.anningtex.wanandroid.base.mvp.IView
+import com.anningtex.wanandroid.home.bean.Article
 import com.anningtex.wanandroid.home.bean.Banner
 
 /**
@@ -13,6 +14,7 @@ import com.anningtex.wanandroid.home.bean.Banner
 interface HomeContract {
     interface View : IView {
         fun onBanner(data: List<Banner>?)
+        fun onArticles(page: Int, data: List<Article>?)
     }
 
     interface Presenter {}

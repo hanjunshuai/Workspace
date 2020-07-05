@@ -1,6 +1,7 @@
 package com.anningtex.wanandroid.base.mvp
 
 import com.anningtex.wanandroid.base.BaseResponse
+import com.anningtex.wanandroid.home.bean.Article
 import com.anningtex.wanandroid.http.BaseObserver
 import com.anningtex.wanandroid.http.RetrofitClient
 import io.reactivex.disposables.CompositeDisposable

@@ -1,6 +1,7 @@
 package com.anningtex.wanandroid.http
 
 import com.anningtex.wanandroid.WanAndroidApplication
+import com.anningtex.wanandroid.util.logInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -24,8 +25,7 @@ class RetrofitClient {
             .readTimeout(10, TimeUnit.SECONDS)
             .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
             .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
-            // TODO  logInterceptor()
-//            .addInterceptor(logInterceptor())
+            .addInterceptor(logInterceptor())
             .cookieJar(WanAndroidApplication.getInstance().getPersistentCookieJar())
 //            .addInterceptor()
             .build()

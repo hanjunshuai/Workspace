@@ -48,4 +48,8 @@ abstract class BaseObserver<T> : DisposableObserver<BaseResponse<T>> {
 
     abstract fun onSuccess(data: T?)
 
+
+    override fun onComplete() {
+        baseView?.dismissLoading()
+    }
 }
