@@ -4,7 +4,8 @@
     <item
         android:id="@+id/item_nav_happy_minute"
         android:icon="@drawable/ic_meizi"
-        android:title="轻松一刻" />
+        android:title="轻松一刻"
+        android:visible="false" />
 
     <item
         android:id="@+id/item_nav_favorite"

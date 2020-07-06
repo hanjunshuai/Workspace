@@ -49,7 +49,7 @@
                 app:tabGravity="center"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicatorHeight="0dp"
-                app:tabMode="fixed"
+                app:tabMode="scrollable"
                 app:tabRippleColor="@android:color/transparent"
                 app:tabTextColor="@color/color_f5c">
 

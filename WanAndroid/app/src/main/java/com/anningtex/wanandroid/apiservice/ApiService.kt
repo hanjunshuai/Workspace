@@ -72,7 +72,8 @@ interface ApiService {
         @Path("page") page: Int
     ): Observable<BaseResponse<List<Meizi>>>
 
-    fun getArticleFavorites(page: Int): Observable<BaseResponse<ArticleResponse>>
+    @GET("lg/collect/list/{page}/json")
+    fun getArticleFavorites(@Path("page") page: Int): Observable<BaseResponse<ArticleResponse>>
 
     @GET("user/logout/json")
     fun logout(): Observable<BaseResponse<LogoutResult>>
