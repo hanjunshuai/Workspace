@@ -1,6 +1,7 @@
 package com.anningtex.wanandroid.apiservice
 
 import com.anningtex.wanandroid.base.BaseResponse
+import com.anningtex.wanandroid.db.bean.User
 import com.anningtex.wanandroid.gank.bean.GankToday
 import com.anningtex.wanandroid.gank.bean.WxPublic
 import com.anningtex.wanandroid.home.bean.Article
@@ -9,10 +10,13 @@ import com.anningtex.wanandroid.home.bean.Banner
 import com.anningtex.wanandroid.project.bean.ProjectResponse
 import com.anningtex.wanandroid.project.bean.ProjectTab
 import com.anningtex.wanandroid.system.bean.SystemCategory
+import com.xing.wanandroid.meizi.bean.Meizi
+import com.xing.wanandroid.search.bean.SearchHot
+import com.xing.wanandroid.search.bean.SearchResultResponse
+import com.xing.wanandroid.setting.bean.LogoutResult
+import com.xing.wanandroid.user.bean.RegisterResponse
 import io.reactivex.Observable
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 import java.util.HashMap
 
 /**
@@ -61,5 +65,41 @@ interface ApiService {
         @Path("id") id: Int,
         @Path("page") page: Int
     ): Observable<BaseResponse<ArticleResponse>>
+
+    @GET("http://gank.io/api/data/福利/{pageSize}/{page}")
+    fun getMeiziList(
+        @Path("pageSize") pageSize: Int,
+        @Path("page") page: Int
+    ): Observable<BaseResponse<List<Meizi>>>
+
+    fun getArticleFavorites(page: Int): Observable<BaseResponse<ArticleResponse>>
+
+    @GET("user/logout/json")
+    fun logout(): Observable<BaseResponse<LogoutResult>>
+
+    @POST("user/login")
+    @FormUrlEncoded
+    fun login(
+        @Field("username") username: String,
+        @Field("password") password: String
+    ): Observable<BaseResponse<User>>
+
+    @POST("user/register")
+    @FormUrlEncoded
+    fun register(
+        @Field("username") username: String,
+        @Field("password") password: String,
+        @Field("repassword") repassword: String
+    ): Observable<BaseResponse<RegisterResponse>>
+
+    @GET("hotkey/json")
+    fun getSearchHot(): Observable<BaseResponse<ArrayList<SearchHot>>>
+
+    @POST("article/query/{page}/json")
+    @FormUrlEncoded
+    fun getSearchResult(
+        @Path("page") page: Int,
+        @Field("k") keyword: String
+    ): Observable<BaseResponse<SearchResultResponse>>
 
 }

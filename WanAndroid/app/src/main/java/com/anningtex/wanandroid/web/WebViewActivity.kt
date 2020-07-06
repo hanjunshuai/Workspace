@@ -35,6 +35,11 @@ class WebViewActivity : BaseMVPActivity<WebContract.View, WebPresenter>(), WebCo
     private var loadUrl: String? = null
     private var favoriteSuccessView: View? = null
     private var appId: String = "wx2c753629bd2e94bd"
+
+    companion object {
+        val URL: String = "url"
+    }
+
     override fun getLayoutResId(): Int = R.layout.activity_web_view
 
     override fun createPresenter(): WebPresenter = WebPresenter()

@@ -25,7 +25,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".gank.WxPublicArticleActivity"></activity>
+        <activity android:name=".login.RegisterActivity"></activity>
+        <activity android:name=".gank.WxPublicArticleActivity" />
         <activity android:name=".system.SystemArticleActivity" />
         <activity android:name=".img.ImageBrowseActivity" />
 
