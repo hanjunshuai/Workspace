@@ -4,6 +4,7 @@ import com.anningtex.wanandroid.apiservice.ApiService
 import com.anningtex.wanandroid.base.BaseResponse
 import com.anningtex.wanandroid.base.mvp.BasePresenter
 import com.anningtex.wanandroid.http.BaseObserver
+import com.anningtex.wanandroid.web.bean.AddFavoriteResponse
 import com.anningtex.wanandroid.web.contract.WebContract
 import io.reactivex.Observable
 
@@ -15,7 +16,7 @@ import io.reactivex.Observable
  * @CreateDate:     2020/7/6 8:28
  */
 class WebPresenter : BasePresenter<WebContract.View>(), WebContract.Presenter {
-    fun addFavorite(id: Int, title: String, author: String, link: String) {
+    override fun addFavorite(id: Int, title: String, author: String, link: String) {
         val observable: Observable<BaseResponse<AddFavoriteResponse>>
         if (id == -1) {
             observable = create(ApiService::class.java).addFavorite(title, author, link)

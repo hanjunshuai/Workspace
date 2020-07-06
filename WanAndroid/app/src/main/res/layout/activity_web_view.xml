@@ -14,6 +14,7 @@
         android:background="@android:color/white"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
+        style="@style/AppTheme.NoActionBar"
         app:contentInsetStartWithNavigation="0dp" />
 
     <com.anningtex.wanandroid.widget.web.XWebView

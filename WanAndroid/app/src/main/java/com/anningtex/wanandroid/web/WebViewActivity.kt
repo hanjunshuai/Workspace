@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.Toolbar
 import com.anningtex.wanandroid.R
 import com.anningtex.wanandroid.base.mvp.BaseMVPActivity
 import com.anningtex.wanandroid.util.*
+import com.anningtex.wanandroid.web.bean.AddFavoriteResponse
 import com.anningtex.wanandroid.web.bean.WebOptBean
 import com.anningtex.wanandroid.web.contract.WebContract
 import com.anningtex.wanandroid.web.presenter.WebPresenter
@@ -218,6 +220,13 @@ class WebViewActivity : BaseMVPActivity<WebContract.View, WebPresenter>(), WebCo
     override fun onBackPressed() {
         super.onBackPressed()
         goBack()
+    }
+
+    override fun onAddFavorited(addFavoriteResponse: AddFavoriteResponse?) {
+        if (favoriteSuccessView == null) {
+            favoriteSuccessView = LayoutInflater.from(mContext).inflate(R.layout.layout_favorite_toast, null, false)
+            ToastUtils.show(mContext, favoriteSuccessView!!)
+        }
     }
 
 }

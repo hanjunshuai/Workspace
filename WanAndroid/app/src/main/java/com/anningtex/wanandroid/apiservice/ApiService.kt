@@ -10,6 +10,7 @@ import com.anningtex.wanandroid.home.bean.Banner
 import com.anningtex.wanandroid.project.bean.ProjectResponse
 import com.anningtex.wanandroid.project.bean.ProjectTab
 import com.anningtex.wanandroid.system.bean.SystemCategory
+import com.anningtex.wanandroid.web.bean.AddFavoriteResponse
 import com.xing.wanandroid.meizi.bean.Meizi
 import com.xing.wanandroid.search.bean.SearchHot
 import com.xing.wanandroid.search.bean.SearchResultResponse
@@ -102,5 +103,14 @@ interface ApiService {
         @Path("page") page: Int,
         @Field("k") keyword: String
     ): Observable<BaseResponse<SearchResultResponse>>
+
+
+    @POST("lg/collect/{id}/json")
+    fun addFavorite(@Path("id") id: Int): Observable<BaseResponse<AddFavoriteResponse>>
+
+
+    @POST("lg/collect/add/json")
+    @FormUrlEncoded
+    fun addFavorite(@Field("title") title: String, @Field("author") author: String, @Field("link") link: String): Observable<BaseResponse<AddFavoriteResponse>>
 
 }
