@@ -33,8 +33,8 @@ class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter
     fun getArticles(page: Int) {
         val apiService = create(ApiService::class.java)
         val zipObserver = Observable.zip(apiService.getTopArticle(), apiService.getArticles(page),
-            object :
-                BiFunction<BaseResponse<List<Article>>, BaseResponse<ArticleResponse>, BaseResponse<List<Article>>> {
+            object : BiFunction<BaseResponse<List<Article>>,
+                    BaseResponse<ArticleResponse>, BaseResponse<List<Article>>> {
                 override fun apply(
                     resp1: BaseResponse<List<Article>>,
                     resp2: BaseResponse<ArticleResponse>
