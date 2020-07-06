@@ -6,6 +6,7 @@ import com.anningtex.wanandroid.home.bean.ArticleResponse
 import com.anningtex.wanandroid.home.bean.Banner
 import com.anningtex.wanandroid.project.bean.ProjectResponse
 import com.anningtex.wanandroid.project.bean.ProjectTab
+import com.anningtex.wanandroid.system.bean.SystemCategory
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -36,4 +37,13 @@ interface ApiService {
         @Path("page") page: Int,
         @Query("cid") cid: Int
     ): Observable<BaseResponse<ProjectResponse>>
+
+    @GET("tree/json")
+    fun getSystem(): Observable<BaseResponse<List<SystemCategory>>>
+
+    @GET("article/list/{page}/json")
+    fun getSystemArticles(
+        @Path("page") page: Int,
+        @Query("cid") cid: Int
+    ): Observable<BaseResponse<ArticleResponse>>
 }
