@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".project.ProjectFragment">
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_project_tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="35dp"
+        android:background="@android:color/white"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="2dp"
+        app:tabMode="scrollable"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextAppearance="@style/ProjectTabLayoutStyle"
+        app:tabTextColor="@color/color_f32">
 
-</FrameLayout>
+    </com.google.android.material.tabs.TabLayout>
+
+    <com.anningtex.wanandroid.project.weight.ProjectViewPager
+        android:id="@+id/vp_project_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

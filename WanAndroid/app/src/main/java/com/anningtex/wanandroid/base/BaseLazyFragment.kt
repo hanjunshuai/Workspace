@@ -54,7 +54,7 @@ abstract class BaseLazyFragment<in V : IView, P : IPresenter<in V>> : BaseMVPFra
     }
 
     private fun onVisible() {
-        loadData()
+        lazyLoad()
     }
 
     /**

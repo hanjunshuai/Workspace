@@ -7,41 +7,64 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.anningtex.wanandroid.R
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.anningtex.wanandroid.base.mvp.BaseMVPFragment
+import com.anningtex.wanandroid.common.bean.FragmentItem
+import com.anningtex.wanandroid.project.adapter.ProjectPageAdapter
+import com.anningtex.wanandroid.project.bean.ProjectTab
+import com.anningtex.wanandroid.project.contract.ProjectContract
+import com.anningtex.wanandroid.project.presenter.ProjectPresenter
+import com.anningtex.wanandroid.project.weight.ProjectViewPager
+import com.google.android.material.tabs.TabLayout
 
 /**
  * A simple [Fragment] subclass.
  * Use the [ProjectFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ProjectFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class ProjectFragment : BaseMVPFragment<ProjectContract.View, ProjectPresenter>(),
+    ProjectContract.View {
+    private lateinit var adapter: ProjectPageAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    override fun getLayoutResId(): Int = R.layout.fragment_project
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_project, container, false)
-    }
+    override fun createPresenter(): ProjectPresenter = ProjectPresenter()
 
     companion object {
         @JvmStatic
         fun newInstance() = ProjectFragment()
-
     }
+
+    override fun initView(rootView: View?, savedInstanceState: Bundle?) {
+        val tabLayout: TabLayout? = rootView?.findViewById(R.id.tl_project_tabs)
+        val viewPager: ProjectViewPager? = rootView?.findViewById(R.id.vp_project_pager)
+        val fragmentList = mutableListOf<FragmentItem>()
+        adapter = ProjectPageAdapter(childFragmentManager, fragmentList)
+        viewPager?.adapter = adapter
+        tabLayout?.setupWithViewPager(viewPager)
+    }
+
+    override fun initData() {
+        super.initData()
+        presenter.getProjectTabs()
+    }
+
+    override fun onProjectTabs(projectTabs: List<ProjectTab>?) {
+        val projectTabsList = getFragmentItems(projectTabs)
+        adapter.setDataSource(projectTabsList)
+    }
+
+    private fun getFragmentItems(projectTabs: List<ProjectTab>?): List<FragmentItem> {
+        val list = mutableListOf<FragmentItem>()
+        if (projectTabs != null) {
+            for (projectTab in projectTabs) {
+                list.add(
+                    FragmentItem(
+                        projectTab.name, ProjectPageFragment.newInstance(projectTab.id)
+                    )
+                )
+            }
+        }
+        return list
+    }
+
 }
