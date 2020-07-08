@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Generated;
 public class CreditCard {
     @Id
     Long id;
-    Long studentId;   //可以用String
+    Long studentId;
     Long teacherId;
     String userName;//持有者名字
     String cardNum;//卡号

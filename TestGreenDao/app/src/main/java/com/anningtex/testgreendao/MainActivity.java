@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,6 +17,9 @@ import com.anningtex.testgreendao.bean.IdCard;
 import com.anningtex.testgreendao.bean.Student;
 import com.anningtex.testgreendao.bean.StudentAndTeacherBean;
 import com.anningtex.testgreendao.bean.Teacher;
+import com.anningtex.testgreendao.bean.log.OrderEntity;
+import com.anningtex.testgreendao.bean.log.PackNoEntity;
+import com.anningtex.testgreendao.bean.log.WoreHoseEntity;
 import com.anningtex.testgreendao.util.RandomValue;
 
 import java.util.Collections;
@@ -67,47 +71,57 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.to_one_add_data_btn:
                 DaoSession daoSession = null;
-                List<Student> students = null;
-                int size = 0;
                 daoSession = ((AserbaoApplication) getApplication()).getDaoSession();
-                students = daoSession.loadAll(Student.class);
-                size = students.size();
-                List<Teacher> teacherList = daoSession.loadAll(Teacher.class);
-                if (teacherList.size() > 0) {
-                    for (int i = size; i < size + 5; i++) {
-                        Student student = new Student();
-                        student.setStudentNo(i);
-                        int age = mRandom.nextInt(10) + 10;
-                        student.setAge(age);
-                        student.setTelPhone(RandomValue.getTel());
-                        String chineseName = RandomValue.getChineseName();
-                        student.setName(chineseName);
-                        if (i % 2 == 0) {
-                            student.setSex("男");
-                        } else {
-                            student.setAddress(RandomValue.getRoad());
-                            student.setSex("女");
-                        }
-                        student.setGrade(String.valueOf(age % 10) + "年纪");
-                        student.setSchoolName(RandomValue.getSchoolName());
-                        daoSession.insert(student);
 
-                        addOtherData(mRandom, daoSession, chineseName, student.getId(), true);
+                List<WoreHoseEntity> woreHoseEntities = daoSession.loadAll(WoreHoseEntity.class);
 
-                        Collections.shuffle(teacherList);
-                        for (int j = 0; j < mRandom.nextInt(8) + 1; j++) {
-                            if (j < teacherList.size()) {
-                                Teacher teacher = teacherList.get(j);
-                                StudentAndTeacherBean teacherBean = new StudentAndTeacherBean(student.getId(), teacher.getId());
-                                daoSession.insert(teacherBean);
-                            }
-                        }
-                    }
-
-                    mRelationAdapter.refreshAllData(RelationAdapter.STUDENT);
-                } else {
-                    Toast.makeText(this, "请先添加老师数据", Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < 10; i++) {
+                    WoreHoseEntity woreHoseEntity = new WoreHoseEntity();
+                    woreHoseEntity.setId(Long.valueOf(i));
+                    woreHoseEntity.setWereHoseName("仓库" + i);
+                    woreHoseEntities.add(woreHoseEntity);
+                    daoSession.insert(woreHoseEntity);
+                    addOrder(daoSession, woreHoseEntity.getWereHoseName() + " order", woreHoseEntity.getId());
                 }
+
+//                students = daoSession.loadAll(Student.class);
+//                size = students.size();
+//                List<Teacher> teacherList = daoSession.loadAll(Teacher.class);
+//                if (teacherList.size() > 0) {
+//                    for (int i = size; i < size + 5; i++) {
+//                        Student student = new Student();
+//                        student.setStudentNo(i);
+//                        int age = mRandom.nextInt(10) + 10;
+//                        student.setAge(age);
+//                        student.setTelPhone(RandomValue.getTel());
+//                        String chineseName = RandomValue.getChineseName();
+//                        student.setName(chineseName);
+//                        if (i % 2 == 0) {
+//                            student.setSex("男");
+//                        } else {
+//                            student.setAddress(RandomValue.getRoad());
+//                            student.setSex("女");
+//                        }
+//                        student.setGrade(String.valueOf(age % 10) + "年纪");
+//                        student.setSchoolName(RandomValue.getSchoolName());
+//                        daoSession.insert(student);
+//
+//                        addOtherData(mRandom, daoSession, chineseName, student.getId(), true);
+//
+//                        Collections.shuffle(teacherList);
+//                        for (int j = 0; j < mRandom.nextInt(8) + 1; j++) {
+//                            if (j < teacherList.size()) {
+//                                Teacher teacher = teacherList.get(j);
+//                                StudentAndTeacherBean teacherBean = new StudentAndTeacherBean(student.getId(), teacher.getId());
+//                                daoSession.insert(teacherBean);
+//                            }
+//                        }
+//                    }
+//
+//                    mRelationAdapter.refreshAllData(RelationAdapter.STUDENT);
+//                } else {
+//                    Toast.makeText(this, "请先添加老师数据", Toast.LENGTH_SHORT).show();
+//                }
                 break;
             case R.id.to_one_add_teacher_btn:
                 daoSession = ((AserbaoApplication) getApplication()).getDaoSession();
@@ -134,7 +148,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.show_student_btn:
-                mRelationAdapter.refreshAllData(RelationAdapter.STUDENT);
+                daoSession = ((AserbaoApplication) getApplication()).getDaoSession();
+                List<WoreHoseEntity> woreHoseEntities1 = daoSession.loadAll(WoreHoseEntity.class);
+                for (int i = 0; i < woreHoseEntities1.size(); i++) {
+                    Log.e("TAG", woreHoseEntities1.get(i).getWereHoseName() + " \n" +
+                            woreHoseEntities1.get(i).getCreditCardsList().size() + "");
+
+                    if (woreHoseEntities1.get(i).getCreditCardsList() != null) {
+                        for (int j = 0; j < woreHoseEntities1.get(i).getCreditCardsList().size(); j++) {
+                            Log.e("child", woreHoseEntities1.get(i).getCreditCardsList().get(j).getOrderName() + "   " + woreHoseEntities1.get(i).getCreditCardsList().get(j).getMPackNoEntities().toString());
+                        }
+                    }
+                }
+//                mRelationAdapter.refreshAllData(RelationAdapter.STUDENT);
                 break;
             case R.id.show_credit_card_btn:
                 mRelationAdapter.refreshAllData(RelationAdapter.CREDITCARD);
@@ -159,6 +185,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void addOrder(DaoSession daoSession, String orderName, long id) {
+        for (int i = 0; i < 5; i++) {
+            OrderEntity orderEntity = new OrderEntity();
+            orderEntity.setOrderId(id);
+            orderEntity.setOrderName(orderName + i);
+            daoSession.insert(orderEntity);
+            addPackNo(daoSession, orderEntity.getOrderName() + "包号：", orderEntity.getId());
+        }
+    }
+
+    public void addPackNo(DaoSession daoSession, String orderName, long id) {
+        for (int i = 0; i < 2; i++) {
+            PackNoEntity packNoEntity = new PackNoEntity();
+            packNoEntity.setCOrderId(id);
+            packNoEntity.setOrderName(orderName);
+            packNoEntity.setPackNo(orderName + i);
+            daoSession.insert(packNoEntity);
+        }
+    }
 
     public void addOtherData(Random random, DaoSession daoSession, String userName, Long id, boolean isStudent) {
         IdCard idCard = new IdCard();

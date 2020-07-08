@@ -18,7 +18,13 @@
                 android:id="@+id/to_one_add_data_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="随机添加五条学生数据" />
+                android:text="随机添加五条数据" />
+
+            <Button
+                android:id="@+id/show_student_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="仓库" />
 
             <Button
                 android:id="@+id/to_one_add_teacher_btn"
@@ -32,11 +38,6 @@
                 android:layout_height="wrap_content"
                 android:text="显示所有老师数据" />
 
-            <Button
-                android:id="@+id/show_student_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="显示所有学生数据" />
 
             <Button
                 android:id="@+id/show_id_card_btn"
