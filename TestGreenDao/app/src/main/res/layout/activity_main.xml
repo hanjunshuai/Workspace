@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/to_one_add_data_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="随机添加五条学生数据" />
+
+            <Button
+                android:id="@+id/to_one_add_teacher_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="随机添加几条老师数据" />
+
+            <Button
+                android:id="@+id/show_teacher_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="显示所有老师数据" />
+
+            <Button
+                android:id="@+id/show_student_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="显示所有学生数据" />
+
+            <Button
+                android:id="@+id/show_id_card_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="显示所有身份证数据" />
+
+            <Button
+                android:id="@+id/show_credit_card_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="显示所有信用卡数据" />
+
+            <Button
+                android:id="@+id/show_all_data_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="显示所有数据" />
+
+            <Button
+                android:id="@+id/delete_all_data_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="删除整张表" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/to_one_one_reycler_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/to_one_two_reycler_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>
