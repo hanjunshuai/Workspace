@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AnLogKotlin</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="string_menu_scan">扫一扫</string>
+    <string name="string_menu_switch_account">切换账号</string>
+    <string name="string_menu_change_password">修改密码</string>
+    <string name="string_menu_update">版本更新</string>
+    <string name="string_menu_version">当前版本</string>
+</resources>
