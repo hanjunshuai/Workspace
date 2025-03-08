@@ -40,6 +40,9 @@ public class TransformImageView extends AppCompatImageView {
     private Interpolator interpolator = new AccelerateDecelerateInterpolator();
     private boolean isAnimating = false;
 
+    // 控制变量
+    private boolean enableBoundaryRestriction = false; // 默认禁用边界限制，允许自由移动
+
     // 用于标记是否已经初始化
     private boolean isInitialized = false;
 
@@ -65,6 +68,11 @@ public class TransformImageView extends AppCompatImageView {
         gestureDetector = new GestureDetector(context, new GestureListener());
         // 初始化 ScaleGestureDetector
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
+    }
+
+    // 设置是否启用边界限制
+    public void setEnableBoundaryRestriction(boolean enable) {
+        this.enableBoundaryRestriction = enable;
     }
 
     @Override
@@ -127,11 +135,13 @@ public class TransformImageView extends AppCompatImageView {
             case MotionEvent.ACTION_POINTER_UP:
                 lastEvent = null;
                 // 检查是否需要修正缩放比例
-                float scale = getScale();
-                if (scale < MIN_SCALE) {
-                    post(new AnimatedZoomRunnable(scale, MIN_SCALE, getWidth() / 2f, getHeight() / 2f));
-                } else if (scale > MAX_SCALE) {
-                    post(new AnimatedZoomRunnable(scale, MAX_SCALE, getWidth() / 2f, getHeight() / 2f));
+                if (enableBoundaryRestriction) {
+                    float scale = getScale();
+                    if (scale < MIN_SCALE) {
+                        post(new AnimatedZoomRunnable(scale, MIN_SCALE, getWidth() / 2f, getHeight() / 2f));
+                    } else if (scale > MAX_SCALE) {
+                        post(new AnimatedZoomRunnable(scale, MAX_SCALE, getWidth() / 2f, getHeight() / 2f));
+                    }
                 }
                 break;
         }
@@ -221,7 +231,14 @@ public class TransformImageView extends AppCompatImageView {
      * desc:检查矩阵的边界，并更新图片的显示
      */
     private boolean checkAndDisplayMatrix() {
-        if (checkMatrixBounds()) {
+        if (enableBoundaryRestriction) {
+            // 启用边界限制时，执行边界检查
+            if (checkMatrixBounds()) {
+                setImageMatrix(getDrawMatrix());
+                return true;
+            }
+        } else {
+            // 禁用边界限制时，直接应用矩阵，允许自由移动
             setImageMatrix(getDrawMatrix());
             return true;
         }
