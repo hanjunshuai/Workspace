@@ -17,7 +17,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 public class TransformImageView extends AppCompatImageView {
     // 缩放相关常量
-    private static final float MIN_SCALE = 1.0f;
+    private static final float MIN_SCALE = 0.5f;
     private static final float MID_SCALE = 2.0f;
     private static final float MAX_SCALE = 3.0f;
     private static final int ZOOM_DURATION = 300;
@@ -205,7 +205,10 @@ public class TransformImageView extends AppCompatImageView {
                 Math.pow(matrixValues[Matrix.MSKEW_Y], 2));
     }
 
-    // 获取绘制矩阵
+    /**
+     * 获取绘制矩阵
+     * desc:获取最终的绘制矩阵，由 baseMatrix 和 suppMatrix 组合而成
+     */
     private Matrix getDrawMatrix() {
         Matrix drawMatrix = new Matrix();
         drawMatrix.set(baseMatrix);
@@ -213,7 +216,10 @@ public class TransformImageView extends AppCompatImageView {
         return drawMatrix;
     }
 
-    // 检查矩阵边界并显示
+    /**
+     * 检查矩阵边界并显示
+     * desc:检查矩阵的边界，并更新图片的显示
+     */
     private boolean checkAndDisplayMatrix() {
         if (checkMatrixBounds()) {
             setImageMatrix(getDrawMatrix());
@@ -222,7 +228,13 @@ public class TransformImageView extends AppCompatImageView {
         return false;
     }
 
-    // 检查矩阵边界
+    /**
+     * 检查矩阵边界
+     * desc:检查图片是否超出控件边界，并修正图片的位置
+     * 检查图片是否超出控件边界，并修正图片的位置。
+     * 如果图片的宽度或高度小于控件的大小，则居中显示。
+     * 如果图片的边界超出控件，则调整图片的位置。
+     */
     private boolean checkMatrixBounds() {
         final RectF rect = getDisplayRect(getDrawMatrix());
         if (rect == null) {
@@ -278,6 +290,7 @@ public class TransformImageView extends AppCompatImageView {
         final int drawableWidth = drawable.getIntrinsicWidth();
         final int drawableHeight = drawable.getIntrinsicHeight();
 
+        // 初始化矩阵：将图片缩放并居中显示
         baseMatrix.reset();
 
         // 计算缩放比例，使图片适应控件
