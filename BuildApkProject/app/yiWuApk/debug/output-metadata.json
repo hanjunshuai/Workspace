@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.anningtex.buildapkproject",
+  "variantName": "yiWuApkDebug",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 1,
+      "versionName": "1.0",
+      "outputFile": "yiWuApk-2023-12-13-09.17.apk"
+    }
+  ],
+  "elementType": "File"
+}
